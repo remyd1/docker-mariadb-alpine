@@ -17,16 +17,16 @@ pipeline {
 
     stage ('Build container') {
       steps {
-        sh "docker build --pull --rm -t timhaak/mariadb-alpine ."
-        sh "docker tag timhaak/mariadb-alpine:latest timhaak/mariadb-alpine:${env.GIT_COMMIT}"
+        sh "docker build --pull --rm -t dr.haak.co/mariadb-alpine ."
+        sh "docker tag dr.haak.co/mariadb-alpine:latest dr.haak.co/mariadb-alpine:${env.GIT_COMMIT}"
       }
     }
     stage ('Deploy') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'bamboo_dr_haak_co', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
           sh "docker login --username ${USERNAME} --password ${PASSWORD} https://dr.haak.co"
-          sh "docker push timhaak/mariadb-alpine:latest"
-          sh "docker push timhaak/mariadb-alpine:${env.GIT_COMMIT}"
+          sh "docker push dr.haak.co/mariadb-alpine:latest"
+          sh "docker push dr.haak.co/mariadb-alpine:${env.GIT_COMMIT}"
         }
       }
     }
